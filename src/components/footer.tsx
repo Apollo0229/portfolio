@@ -1,5 +1,5 @@
 import { profile } from "@/data/profile";
-import { GitHubIcon } from "./icons";
+import { GitHubIcon, LinkedInIcon } from "./icons";
 
 export function Footer() {
   return (
@@ -20,6 +20,15 @@ export function Footer() {
             className="transition-colors hover:text-ink"
           >
             <GitHubIcon className="size-5" />
+          </a>
+          <a
+            href={profile.linkedin}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="LinkedIn"
+            className="transition-colors hover:text-[#0a66c2]"
+          >
+            <LinkedInIcon className="size-5" />
           </a>
         </div>
       </div>
