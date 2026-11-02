@@ -6,6 +6,7 @@ export const profile = {
   email: "apollo000229@gmail.com",
   github: "https://github.com/Apollo0229",
   githubHandle: "Apollo0229",
+  linkedin: "https://www.linkedin.com/in/austin-creamer-8b2483260",
   yearsOfExperience: 7,
 };
 
