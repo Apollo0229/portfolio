@@ -5,6 +5,7 @@ import { Work } from "./sections/work";
 import { ExperienceTimeline } from "./sections/experience";
 import { Skills } from "./sections/skills";
 import { Contact } from "./sections/contact";
+import { Patterns } from "./sections/patterns";
 import { SectionHeading } from "./ui";
 
 export function RoleView({ role }: { role: Role }) {
@@ -24,9 +25,22 @@ export function RoleView({ role }: { role: Role }) {
               Case studies, told the way <span className="text-gradient">engineers</span> read them.
             </>
           }
-          intro="Each project covers the problem, the architecture, what broke, how I fixed it, and the measured result."
+          intro="Ten projects across Zapier, Regions Bank and Shipt. Each one covers the problem, the architecture, what broke, how I fixed it, and the reported result."
         />
         <Work projects={ordered} />
+      </section>
+
+      <section id="patterns" className="mx-auto max-w-6xl px-4 py-24">
+        <SectionHeading
+          eyebrow="How I build"
+          title={
+            <>
+              Six patterns I keep <span className="text-gradient">coming back to</span>.
+            </>
+          }
+          intro="Different companies, different stacks, the same engineering instincts. Each pattern links to the projects where it carried the load."
+        />
+        <Patterns />
       </section>
 
       <section id="experience" className="mx-auto max-w-6xl px-4 py-24">
