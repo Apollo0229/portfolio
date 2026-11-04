@@ -41,7 +41,8 @@ function withOffsets(tokens: Token[]) {
 /** A dark editor card that types out a role-specific object literal. */
 export function TypedCode({ lines, filename }: { lines: { key: string; value: string }[]; filename: string }) {
   const tokens = useMemo(() => withOffsets(tokenize(lines)), [lines]);
-  const total = tokens.reduce((n, t) => n + t.text.length, 0);
+  const text = tokens.map((t) => t.text).join("");
+  const total = text.length;
   const [shown, setShown] = useState(0);
 
   useEffect(() => {
@@ -72,9 +73,10 @@ export function TypedCode({ lines, filename }: { lines: { key: string; value: st
       <pre className="relative min-h-[11.5rem] overflow-x-auto p-5 font-mono text-[13px] leading-6 sm:text-sm">
         {/* Invisible full text reserves the final size so layout never jumps. */}
         <code aria-hidden className="invisible block">
-          {tokens.map((t) => t.text).join("")}
+          {text}
         </code>
-        <code className="absolute inset-0 p-5" aria-label={tokens.map((t) => t.text).join("")}>
+        <span className="sr-only">{text}</span>
+        <code aria-hidden className="absolute inset-0 p-5">
           {tokens.map((t, i) => {
             if (shown <= t.start) return null;
             const part = t.text.slice(0, shown - t.start);
