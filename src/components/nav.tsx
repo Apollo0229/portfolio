@@ -8,6 +8,7 @@ import { profile } from "@/data/profile";
 
 const sections = [
   { id: "work", label: "Work" },
+  { id: "patterns", label: "Patterns" },
   { id: "experience", label: "Experience" },
   { id: "skills", label: "Skills" },
 ];
@@ -26,7 +27,7 @@ export function Nav() {
   return (
     <header className="fixed inset-x-0 top-0 z-50">
       <div className="mx-auto mt-3 max-w-6xl px-4">
-        <nav className="flex items-center gap-3 rounded-2xl border border-line/80 bg-white/70 px-3 py-2 shadow-[0_8px_30px_-12px_rgba(15,23,42,0.18)] backdrop-blur-xl">
+        <nav aria-label="Primary" className="flex items-center gap-3 rounded-2xl border border-line/80 bg-white/70 px-3 py-2 shadow-[0_8px_30px_-12px_rgba(15,23,42,0.18)] backdrop-blur-xl">
           <Link href={base} className="group flex shrink-0 items-center gap-2 pl-1">
             <span className="grid size-8 place-items-center rounded-lg bg-linear-to-br from-brand via-brand-2 to-brand-3 font-display text-sm font-extrabold text-white shadow-md transition-transform group-hover:rotate-6">
               AC
@@ -40,7 +41,7 @@ export function Nav() {
           </Link>
 
           <div
-            role="tablist"
+            role="group"
             aria-label="Choose a role view"
             className="mx-auto flex min-w-0 items-center gap-0.5 overflow-x-auto rounded-xl bg-canvas p-1 [scrollbar-width:none]"
           >
@@ -51,8 +52,7 @@ export function Nav() {
                   key={r.key}
                   href={r.path}
                   scroll={false}
-                  role="tab"
-                  aria-selected={active}
+                  aria-current={active ? "page" : undefined}
                   className={`relative shrink-0 rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors sm:text-sm ${
                     active ? "text-white" : "text-muted hover:text-ink"
                   }`}
