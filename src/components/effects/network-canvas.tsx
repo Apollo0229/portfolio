@@ -166,7 +166,9 @@ export function NetworkCanvas({ className }: { className?: string }) {
       mouse.x = e.clientX - rect.left;
       mouse.y = e.clientY - rect.top;
     };
-    const onLeave = () => {
+    // pointerout with no relatedTarget means the pointer left the window.
+    const onLeave = (e: PointerEvent) => {
+      if (e.relatedTarget) return;
       mouse.x = -9999;
       mouse.y = -9999;
     };
@@ -181,7 +183,7 @@ export function NetworkCanvas({ className }: { className?: string }) {
     resize();
     if (!reduced) {
       window.addEventListener("pointermove", onMove, { passive: true });
-      document.addEventListener("pointerleave", onLeave);
+      window.addEventListener("pointerout", onLeave);
       frame = requestAnimationFrame(loop);
     }
 
@@ -190,7 +192,7 @@ export function NetworkCanvas({ className }: { className?: string }) {
       ro.disconnect();
       io.disconnect();
       window.removeEventListener("pointermove", onMove);
-      document.removeEventListener("pointerleave", onLeave);
+      window.removeEventListener("pointerout", onLeave);
     };
   }, []);
 
