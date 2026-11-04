@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { trackLabels, type Track } from "@/data/projects";
+import { trackLabels, type Company, type Track } from "@/data/projects";
 import { Reveal } from "./effects/reveal";
 
 export const trackColor: Record<Track, string> = {
@@ -8,6 +8,27 @@ export const trackColor: Record<Track, string> = {
   frontend: "var(--color-track-frontend)",
   fullstack: "var(--color-track-fullstack)",
 };
+
+export const companyColor: Record<Company, string> = {
+  Zapier: "#ff4f00",
+  "Regions Bank": "#4d8a1f",
+  Shipt: "#0f9d76",
+};
+
+export function CompanyMark({ company }: { company: Company }) {
+  return (
+    <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-ink-soft">
+      <span
+        aria-hidden
+        className="grid size-5 place-items-center rounded-md font-display text-[10px] font-extrabold text-white"
+        style={{ background: companyColor[company] }}
+      >
+        {company[0]}
+      </span>
+      {company}
+    </span>
+  );
+}
 
 export function TrackBadge({ track }: { track: Track }) {
   return (
