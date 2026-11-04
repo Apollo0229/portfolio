@@ -13,7 +13,9 @@ The site has one view per role, and each view reorders the headline, metrics, ca
 | Backend | [`/backend/`](https://apollo0229.github.io/portfolio/backend/) |
 | AI Engineer | [`/ai/`](https://apollo0229.github.io/portfolio/ai/) |
 
-Each case study under `/projects/<slug>/` covers the purpose, architecture, the hard part, the solution and measured results, with an animated system-flow diagram.
+Ten case studies from Zapier, Regions Bank and Shipt live under `/projects/<slug>/`. Each covers the focus, architecture, the hard part, the approach and reported outcomes, with an animated system-flow diagram. A "How I build" section links six recurring engineering patterns to the projects that use them.
+
+Every page has its own share card (`og.png`, rendered at build time) and is listed in `sitemap.xml`.
 
 ## Stack
 
