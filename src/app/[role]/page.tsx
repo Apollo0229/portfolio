@@ -12,7 +12,20 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: PageProps<"/[role]">): Promise<Metadata> {
   const role = getRole((await params).role);
-  return role ? { title: role.title, description: role.summary } : {};
+  if (!role) return {};
+  const title = `${role.title} portfolio`;
+  return {
+    title,
+    description: role.summary,
+    alternates: { canonical: role.path },
+    openGraph: {
+      title,
+      description: role.summary,
+      url: role.path,
+      images: [{ url: `${role.path}og.png`, width: 1200, height: 630, alt: title }],
+    },
+    twitter: { title, description: role.summary },
+  };
 }
 
 export default async function RolePage({ params }: PageProps<"/[role]">) {
