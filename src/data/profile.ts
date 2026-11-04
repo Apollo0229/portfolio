@@ -1,3 +1,5 @@
+import type { Metric } from "./projects";
+
 export const profile = {
   name: "Austin Creamer",
   nickname: "Apollo",
@@ -16,8 +18,13 @@ export type Experience = {
   period: string;
   location: string;
   domain: string;
-  stack: string[];
+  /** Brand-ish accent for the company mark. */
+  accent: string;
+  /** One line on what the job was about. */
+  summary: string;
+  metrics: Metric[];
   highlights: string[];
+  stack: string[];
 };
 
 export const experience: Experience[] = [
@@ -27,14 +34,19 @@ export const experience: Experience[] = [
     period: "May 2024 – Jul 2026",
     location: "Remote, US",
     domain: "AI · Workflow automation SaaS",
-    stack: ["Python", "Node.js", "React", "TypeScript", "Kafka", "Elasticsearch", "LLMs / RAG"],
-    highlights: [
-      "Built and maintained Python and Node.js services, API orchestration and data-processing workflows powering automation across 8,000+ app integrations.",
-      "Tuned concurrency, retries and failure handling in high-volume background processing — ~25% higher event throughput and ~30% fewer peak-period API timeouts.",
-      "Shipped customer-facing dashboards and workflow interfaces in React, TypeScript and Tailwind CSS that made complex automation easier to configure and debug.",
-      "Built RAG-based, multi-step LLM workflows with validation and controlled execution steps for reliable AI-assisted automation.",
-      "Traced production failures across frontend, backend and integration layers of distributed workflows, cutting recurring incidents.",
+    accent: "#ff4f00",
+    summary: "Full-stack and AI work on the automation platform behind 8,000+ app integrations.",
+    metrics: [
+      { value: "91%", label: "zero-shot workflow generation" },
+      { value: "−90%", label: "Kafka connections" },
+      { value: "320ms", label: "audit search (from 4.8s)" },
     ],
+    highlights: [
+      "Built the natural-language → workflow engine behind Zapier Copilot.",
+      "Scaled the Kafka and Celery pipeline that carries webhook and polling bursts.",
+      "Shipped fast audit search and a 60 FPS workflow canvas in React.",
+    ],
+    stack: ["Python", "Django", "React", "TypeScript", "Kafka", "Elasticsearch", "LLMs / RAG"],
   },
   {
     company: "Regions Bank",
@@ -42,40 +54,54 @@ export const experience: Experience[] = [
     period: "Jul 2021 – Apr 2024",
     location: "Birmingham, AL",
     domain: "Fintech · Digital banking",
-    stack: ["C#", "ASP.NET Core", "Angular", "React", "AWS", "Docker", "Kubernetes", "Harness"],
-    highlights: [
-      "Led full-stack development of high-volume digital banking applications in C#, ASP.NET Core, Angular and React.",
-      "Built REST and SOAP APIs connecting frontends to banking services, relational databases and external systems with strict security and data-integrity requirements.",
-      "Containerized services with Docker and Kubernetes on AWS and automated releases through Harness CI/CD — release cycles ~30% shorter.",
-      "Closed application and API security findings through input validation, access-control hardening, dependency updates and database fixes.",
+    accent: "#4d8a1f",
+    summary: "Led full-stack delivery on core banking, treasury and customer-support platforms.",
+    metrics: [
+      { value: "−40%", label: "mainframe dependency" },
+      { value: "+48%", label: "treasury client satisfaction" },
+      { value: "+55%", label: "automated support resolution" },
     ],
+    highlights: [
+      "Moved core ledger workloads off the mainframe onto event-driven services.",
+      "Built a streaming search portal for institutional treasury clients.",
+      "Added policy-checked LLM answers to digital support, with zero privacy exposures.",
+    ],
+    stack: ["C#", ".NET Core", "React", "Python", "Kafka", "Elasticsearch", "AWS"],
   },
   {
     company: "Shipt",
-    role: "Full Stack Engineer",
+    role: "Full-Stack Engineer",
     period: "Jan 2020 – Jun 2021",
     location: "Birmingham, AL",
-    domain: "E-commerce · Same-day marketplace",
-    stack: ["Node.js", "TypeScript", "WebSockets", "React", "Ruby on Rails", "Go", "PostgreSQL"],
-    highlights: [
-      "Developed full-stack features for a same-day retail marketplace used by millions of customers and shoppers.",
-      "Refactored the real-time customer-to-shopper messaging system (Node.js, TypeScript, WebSockets) — ~25% fewer connection failures at peak traffic.",
-      "Built reusable React components for customer and shopper workflows.",
-      "Extended Ruby on Rails and Go microservices on PostgreSQL and AWS for order and communication workflows.",
+    domain: "E-commerce · Same-day delivery",
+    accent: "#0f9d76",
+    summary: "Real-time fulfillment, merchant tools and delivery operations for a same-day marketplace.",
+    metrics: [
+      { value: "2.5M", label: "active orders supported" },
+      { value: "10×", label: "lower broker load" },
+      { value: "60 FPS", label: "on 1,500+ catalog nodes" },
     ],
+    highlights: [
+      "Built real-time routing that matches shoppers to live delivery queues.",
+      "Took the merchant catalog workspace from 15 to 60 FPS.",
+      "Cut delivery-audit queries from seconds to about 320 ms.",
+    ],
+    stack: ["Python", "FastAPI", "Django", "React", "TypeScript", "Redis", "Kafka"],
   },
   {
     company: "Daxko",
     role: "Software Engineer",
     period: "May 2019 – Dec 2019",
     location: "Birmingham, AL",
-    domain: "Enterprise SaaS · Membership & operations",
-    stack: ["Java", "Spring Boot", "React", "SQL"],
+    domain: "Enterprise SaaS · Membership software",
+    accent: "#2563eb",
+    summary: "Membership and operations software for fitness and wellness organizations.",
+    metrics: [{ value: "−20%", label: "transaction defects" }],
     highlights: [
-      "Built full-stack features for membership and operations software used by fitness and wellness organizations.",
-      "Improved Spring Boot APIs and transaction-processing workflows — ~20% fewer transaction-related defects in affected modules.",
-      "Delivered React UI enhancements, backend fixes and database updates with product stakeholders.",
+      "Hardened Spring Boot APIs and transaction-processing workflows.",
+      "Shipped React features and database fixes with product teams.",
     ],
+    stack: ["Java", "Spring Boot", "React", "SQL"],
   },
 ];
 
