@@ -6,6 +6,7 @@ import { ExperienceTimeline } from "./sections/experience";
 import { Skills } from "./sections/skills";
 import { Contact } from "./sections/contact";
 import { Patterns } from "./sections/patterns";
+import { OpenSource } from "./sections/open-source";
 import { SectionHeading } from "./ui";
 
 export function RoleView({ role }: { role: Role }) {
@@ -16,6 +17,18 @@ export function RoleView({ role }: { role: Role }) {
   return (
     <>
       <Hero role={role} />
+
+      <section id="open-source" className="mx-auto max-w-6xl px-4 pt-16">
+        <SectionHeading
+          eyebrow="Open source"
+          title={
+            <>
+              Something you can <span className="text-gradient">run</span>, not just read about.
+            </>
+          }
+        />
+        <OpenSource />
+      </section>
 
       <section id="work" className="mx-auto max-w-6xl px-4 py-24">
         <SectionHeading
