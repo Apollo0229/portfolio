@@ -1,15 +1,17 @@
 "use client";
 
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useEffect, useState } from "react";
 
 export function RotatingWords({ words, className }: { words: string[]; className?: string }) {
   const [i, setI] = useState(0);
+  const reduced = useReducedMotion();
 
   useEffect(() => {
+    if (reduced) return;
     const id = window.setInterval(() => setI((n) => (n + 1) % words.length), 2400);
     return () => window.clearInterval(id);
-  }, [words.length]);
+  }, [words.length, reduced]);
 
   return (
     <span className={`inline-block ${className ?? ""}`}>
