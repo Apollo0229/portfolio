@@ -27,7 +27,7 @@ export function RoleView({ role }: { role: Role }) {
             </>
           }
         />
-        <OpenSource />
+        <OpenSource role={role.key} />
       </section>
 
       <section id="work" className="mx-auto max-w-6xl px-4 py-24">
