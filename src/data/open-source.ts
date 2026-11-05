@@ -12,8 +12,10 @@ export type OpenSourceProject = {
   name: string;
   tagline: string;
   description: string;
-  /** Live demo, if the project has one. */
-  demo?: string;
+  /** Hosted demo, if the project has one, and what its button says. */
+  demo?: { url: string; label: string };
+  /** The pill above the name. */
+  badge: string;
   source: string;
   highlights: string[];
   stack: string[];
@@ -29,7 +31,8 @@ export const openSource: OpenSourceProject[] = [
     tagline: "Plain English in. Validated workflows out.",
     description:
       "Describe an automation and Flowsmith retrieves the right apps, plans a workflow with Claude or an offline planner, and checks every step and data reference before anything could run. Invalid plans go back to the model with structured hints.",
-    demo: "https://apollo0229.github.io/flowsmith/",
+    demo: { url: "https://apollo0229.github.io/flowsmith/", label: "Try the live demo" },
+    badge: "Open source · live demo",
     source: "https://github.com/Apollo0229/flowsmith",
     highlights: [
       "Deterministic validator: 17 issue types, each with a path and a fix hint",
@@ -54,6 +57,8 @@ export const openSource: OpenSourceProject[] = [
     tagline: "Webhooks in. Nothing lost. Processed once.",
     description:
       "An event pipeline built to survive crashes. Each webhook and its outbox message commit in one transaction, a Go relay moves them to Kafka, and Python workers apply every event exactly once, with delay-topic retries and a dead-letter topic.",
+    demo: { url: "https://apollo0229.github.io/relay/", label: "Watch the crash test" },
+    badge: "Open source · crash-test replay",
     source: "https://github.com/Apollo0229/relay",
     highlights: [
       "Crash-tested: relay, worker, API and Kafka killed mid-load; 21,295 webhooks, none lost, none applied twice",
