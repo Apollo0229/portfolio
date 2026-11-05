@@ -26,7 +26,7 @@ export function OpenSource({ role }: { role: RoleKey }) {
                     <span className="absolute inline-flex size-full animate-ping rounded-full bg-emerald-400 opacity-75" />
                     <span className="relative inline-flex size-2 rounded-full bg-emerald-400" />
                   </span>
-                  {p.demo ? "Open source · live demo" : "Open source · crash-tested"}
+                  {p.badge}
                 </p>
                 <h3 className="mt-5 font-display text-4xl font-extrabold tracking-tight sm:text-5xl">{p.name}</h3>
                 <p className="mt-2 font-display text-xl font-semibold text-white/90">{p.tagline}</p>
@@ -54,12 +54,12 @@ export function OpenSource({ role }: { role: RoleKey }) {
                 <div className="mt-8 flex flex-wrap gap-3">
                   {p.demo && (
                     <a
-                      href={p.demo}
+                      href={p.demo.url}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="group inline-flex items-center gap-2 rounded-xl bg-white px-5 py-3 font-semibold text-ink shadow-lg shadow-brand/30 transition hover:-translate-y-0.5"
                     >
-                      Try the live demo
+                      {p.demo.label}
                       <ArrowUpRight className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                     </a>
                   )}
