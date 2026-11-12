@@ -7,9 +7,19 @@ export const trackLabels: Record<Track, string> = {
   fullstack: "Full Stack",
 };
 
-export type Company = "Zapier" | "Regions Bank" | "Shipt";
+export type Company = "Zapier" | "Regions Bank" | "Shipt" | "Daxko";
 
 export type Metric = { value: string; label: string };
+
+/** A picture of the product the work was part of. The caption says exactly what it shows. */
+export type ProjectImage = {
+  /** Path under /public, without the base path. */
+  src: string;
+  width: number;
+  height: number;
+  alt: string;
+  caption: string;
+};
 
 export type Project = {
   slug: string;
@@ -25,281 +35,496 @@ export type Project = {
   challenge: string;
   approach: string;
   outcome: string;
+  /** Measured results only; empty when there are none to stand behind. */
   metrics: Metric[];
   stack: string[];
   /** Left-to-right request path shown as an animated pipeline diagram. */
   flow: string[];
   /** Optional feedback edge drawn under the pipeline, e.g. a retry loop. */
   loop?: { from: number; to: number; label: string };
+  image?: ProjectImage;
 };
 
 export const projects: Project[] = [
+  // ── Zapier ──────────────────────────────────────────────────────────────
   {
-    slug: "zap-history-audit-engine",
+    slug: "copilot-workflow-builder",
     company: "Zapier",
     track: "fullstack",
-    period: "Sep 2024 – Feb 2025",
-    title: "High-Scale Zap History & Audit Engine",
-    short: "Zap History & Audit",
-    tagline: "Fast search, filtering and troubleshooting across multi-terabyte automation history.",
+    period: "Mid 2024 – Late 2025",
+    title: "Copilot-Assisted Natural Language Workflow Builder",
+    short: "Copilot Workflow Builder",
+    tagline: "Describe an automation in plain words and watch it appear, step by step, on a live canvas.",
     focus:
-      "Help customers search, filter, inspect and troubleshoot historical automation execution records at scale.",
+      "Let people set up multi-step automations by describing them, without manual API pairing, variable formatting or validation rules.",
     architecture:
-      "A React interface talks to Python/Django services. Elasticsearch indexes recent task metadata and hot execution records, while older history is compressed and archived in AWS S3. A two-phase query flow searches the relevant Elasticsearch shards first; when a request spans older data, a background worker retrieves the archived records and streams updates to the UI over Server-Sent Events.",
+      "A Backend-for-Frontend design. A Next.js layer serves the interactive canvas and relays each plain-text request to a Python/Django service, which extracts entities with generative AI, turns them into a structured JSON workflow tree and records it in an isolated PostgreSQL ledger. A long-lived WebSocket keeps the user's canvas and the backend in sync.",
     challenge:
-      "Complex text searches and date filters across multi-terabyte execution history caused API latency and memory pressure.",
+      "Live updates to large, multi-tier workflow maps arrived out of order over the network, causing layout shifts and broken schema hydration.",
     approach:
-      "An asynchronous search path that returns an immediate loading state, prioritizes indexed hot data and retrieves archived records in the background. SSE keeps the interface updating as historical results arrive.",
+      "Formal JSON Schema guardrails in Django so every generated workflow is well-formed before it reaches the client, and optimistic UI updates in React so the canvas renders smoothly even for detailed flows.",
     outcome:
-      "Median search latency for hot storage fell from more than 4.8 seconds to about 320 milliseconds, with steadier behavior during high-volume audits.",
+      "Setting up a typical five-step integration took half the time, and far fewer people abandoned configuration part way through.",
     metrics: [
-      { value: "4.8s → 320ms", label: "median search latency (hot storage)" },
-      { value: "Multi-TB", label: "execution history searchable" },
-      { value: "SSE", label: "streams archived results as they arrive" },
+      { value: "−50%", label: "time to set up a five-step integration" },
+      { value: "JSON Schema", label: "guardrails on every generated workflow" },
     ],
-    stack: ["React", "Python", "Django", "Elasticsearch", "AWS S3", "Background workers", "Server-Sent Events"],
-    flow: ["React search UI", "Django query coordinator", "Hot Elasticsearch shards", "S3 archive worker", "SSE stream", "Hydrated results"],
+    stack: ["Next.js", "React", "Python", "Django", "PostgreSQL", "OpenAI API", "WebSockets", "Docker"],
+    flow: ["Plain-English request", "Next.js BFF", "Django AI service", "JSON Schema check", "PostgreSQL ledger", "Live canvas"],
+    image: {
+      src: "/projects/copilot-workflow-builder.webp",
+      width: 1452,
+      height: 948,
+      alt: "Zapier's Copilot workflow editor, with a chat panel beside the workflow steps it built",
+      caption: "Public screenshot of Zapier Copilot's workflow editor, the product this work was part of. Screenshot: Zapier.",
+    },
   },
   {
     slug: "visual-workflow-canvas",
     company: "Zapier",
     track: "frontend",
-    period: "Mar 2025 – Jul 2025",
-    title: "Interactive Visual Workflow Canvas",
+    period: "Late 2024 – Early 2026",
+    title: "Infinite Canvas Visualization Architecture",
     short: "Workflow Canvas",
-    tagline: "A drag-and-drop workflow editor that holds 60 FPS with 150+ branching steps.",
+    tagline: "An infinite workflow canvas that holds 60 FPS with up to 150 branching app steps.",
     focus:
-      "Provide a responsive drag-and-drop editor for building and managing nested, multi-branch automation workflows.",
+      "Give people one visual workspace to plan, simulate and organize their operations, replacing separate list menus with an infinite canvas.",
     architecture:
-      "React/TypeScript application state drives a hybrid Canvas and SVG renderer. Web Workers run layout calculations off the main thread, DOM virtualization removes off-screen steps from the render path, and static connection lines are drawn on a dedicated canvas layer.",
+      "Execution paths are drawn on a hybrid HTML5 Canvas and SVG layer instead of DOM nodes. Local state lives in Zustand to avoid root-level React re-renders, and node layout is calculated in background Web Workers so the main thread stays free.",
     challenge:
-      "Pan-and-zoom across large workflows caused frame drops and visible stutter as nested branches grew.",
+      "Dragging large automations with hundreds of linked fields caused visible lag and stutter, especially on lower-spec mobile and desktop screens.",
     approach:
-      "Separated the rendering layers, moved layout into Web Workers, culled off-screen nodes and rendered static connections independently of the React update cycle.",
+      "A frustum-culling engine that unmounts workflow components outside the viewport and freezes deep UI-tree calculations beyond the visible bounds.",
     outcome:
-      "Steady rendering at about 60 FPS on workflow graphs with more than 150 active steps and branches.",
+      "The main rendering thread held a steady 60 FPS for workflows with up to 150 app steps, and frontend memory use fell by about a third.",
     metrics: [
-      { value: "60 FPS", label: "sustained during pan & zoom" },
-      { value: "150+", label: "active steps and branches per graph" },
-      { value: "Off-thread", label: "layout in Web Workers" },
+      { value: "60 FPS", label: "steady, with up to 150 app steps" },
+      { value: "−35%", label: "frontend memory use (approx.)" },
     ],
-    stack: ["React", "TypeScript", "HTML5 Canvas", "SVG", "Web Workers", "DOM virtualization", "CSS Modules (LCH)"],
-    flow: ["React graph state", "Layout Web Worker", "Viewport culling", "SVG node layer", "Canvas edge layer", "60 FPS frame"],
+    stack: ["React", "TypeScript", "Zustand", "HTML5 Canvas", "SVG", "Web Workers", "Vite"],
+    flow: ["Pointer input", "Zustand store", "Web Worker layout", "Viewport culling", "Canvas + SVG paint"],
+    image: {
+      src: "/projects/visual-workflow-canvas.webp",
+      width: 1600,
+      height: 905,
+      alt: "A Zapier workflow with conditional branches laid out as connected steps",
+      caption:
+        "Public screenshot of Zapier's branching workflow interface. It shows the product, not the canvas rendering engine described here. Screenshot: Zapier.",
+    },
   },
   {
-    slug: "async-messaging-pipeline",
+    slug: "reliable-event-routing",
     company: "Zapier",
     track: "backend",
-    period: "Aug 2025 – Dec 2025",
-    title: "High-Throughput Asynchronous Messaging Pipeline",
-    short: "Messaging Pipeline",
-    tagline: "Ingesting and dispatching high-volume webhooks and polling events without melting the brokers.",
+    period: "Mid 2024 – Mid 2025",
+    title: "Transactional Outbox Event Engine for Fault-Tolerant Retries",
+    short: "Reliable Event Routing",
+    tagline: "Every workflow task delivered, even through traffic spikes and third-party outages.",
     focus:
-      "Reliably ingest, queue and dispatch high-volume webhooks and polling events across connected third-party apps.",
+      "Stop data loss and dropped executions during sudden traffic surges or when third-party services go down.",
     architecture:
-      "Django services persist application changes together with their outbox events. Celery workers process asynchronous work and publish to Kafka, while a sidecar proxy on each containerized worker pools and reuses broker connections so traffic spikes stop forcing fresh TCP handshakes.",
+      "The transactional core of the execution engine. Instead of calling third-party endpoints mid-transaction, each state change and its task payload commit together in one PostgreSQL transaction (a transactional outbox). Go log tailers poll the outbox and publish to Kafka, where consumers route each webhook to its destination.",
     challenge:
-      "Large bursts of webhook and polling activity created heavy connection churn, network saturation and memory pressure at the Kafka broker boundary.",
+      "Write amplification in PostgreSQL during big volume spikes could lock critical databases.",
     approach:
-      "Sidecar-based connection pooling with persistent, pre-warmed connections, cutting the number of short-lived client connections that reach the brokers.",
+      "A dynamic database-splitting framework plus Redis sliding-window rate limits that move non-critical retry queues off the main write path.",
     outcome:
-      "Kafka TCP socket connections dropped 90% and core infrastructure operating costs fell 34%, with flatter latency during traffic bursts.",
+      "Webhook delivery tracking reached 99.999% reliability, with no more “zombie” tasks that silently went missing, at peaks above 40,000 tasks per second.",
     metrics: [
-      { value: "−90%", label: "Kafka TCP socket connections" },
-      { value: "−34%", label: "core infrastructure operating cost" },
-      { value: "99.99%", label: "availability target under burst load" },
+      { value: "99.999%", label: "webhook tracking reliability" },
+      { value: "40,000+/s", label: "tasks at peak load" },
     ],
-    stack: ["Python", "Django", "Apache Kafka", "Celery", "Transactional outbox", "Sidecar proxies", "TCP pooling"],
-    flow: ["Webhooks & polls", "Django services", "Outbox table", "Celery workers", "Sidecar connection pool", "Kafka brokers"],
+    stack: ["Go", "Apache Kafka", "PostgreSQL", "AWS EKS", "Redis Enterprise", "Envoy"],
+    flow: ["Workflow step", "PostgreSQL + outbox", "Go outbox tailer", "Kafka", "Routing consumers", "Destination webhook"],
+    loop: { from: 5, to: 3, label: "failed deliveries retried through rate-limited queues" },
   },
   {
-    slug: "natural-language-workflow-engine",
+    slug: "autonomous-agent-orchestration",
     company: "Zapier",
     track: "ai",
-    period: "Jan 2026 – Jun 2026",
-    title: "Natural Language to Workflow Engine",
-    short: "NL → Workflow Engine",
-    tagline: "Zapier Copilot Core — turning plain English into valid, executable multi-step automations.",
+    period: "Early 2024 – Mid 2026",
+    title: "Multi-Agent Automation Orchestration Platform",
+    short: "Agent Orchestration",
+    tagline: "AI agents that act on open-ended requests, and stop to ask a person when they aren't sure.",
     focus:
-      "Translate natural-language instructions into valid, executable, multi-step automation workflows.",
+      "Move automation beyond fixed logic chains, so agents can make decisions, handle unexpected data and fix broken steps on their own.",
     architecture:
-      "An LLM router classifies the user's intent. Relevant third-party API schemas are retrieved from a vector database and supplied as context for generation. Before anything runs, a deterministic validation layer checks the generated workflow JSON against schema requirements and step-dependency rules.",
+      "Custom LangGraph execution loops handle open-ended requests such as “if pipeline costs shift, alert the manager and update the tracking sheet”. Incoming data is embedded and matched against past workflow behavior in a Milvus vector cluster, and that context goes to an LLM router behind FastAPI, which turns the request into sequential API calls across Zapier's integrations.",
     challenge:
-      "Generated workflows sometimes contained fabricated API endpoint paths or invalid data mappings between steps, producing execution graphs with broken dependencies.",
+      "Models sometimes looped endlessly or guessed API values that didn't exist when working with customized user spreadsheets.",
     approach:
-      "Deterministic schema and graph validation before execution. Invalid output is rejected with structured errors that go back to the model for a correction pass, instead of being trusted because the model produced it.",
+      "Real-time evaluation tracing with Braintrust, plus validation loops that pause the agent and hand off to a person whenever confidence drops below a set floor.",
     outcome:
-      "A 91% zero-shot success rate on standard multi-step workflow generation and a 42% reduction in initial Zap-creation drop-off.",
-    metrics: [
-      { value: "91%", label: "zero-shot success on multi-step workflows" },
-      { value: "−42%", label: "drop-off in initial Zap creation" },
-      { value: "Pre-execution", label: "schema & dependency validation" },
-    ],
-    stack: ["LLM orchestration", "Intent classification", "Vector database", "RAG", "JSON Schema", "Graph linting"],
-    flow: ["User prompt", "LLM intent router", "Schema retrieval (vector DB)", "Workflow generation", "Schema & graph validator", "Executable Zap"],
-    loop: { from: 4, to: 3, label: "structured validation errors fed back for a correction pass" },
+      "Agents corrected more than 30% of minor data mismatches on their own, lifting completion rates for complex, open-ended tasks.",
+    metrics: [{ value: "30%+", label: "minor data mismatches self-corrected" }],
+    stack: ["Python", "LangGraph", "LangChain", "Milvus", "Qdrant", "FastAPI", "Braintrust", "AWS Bedrock"],
+    flow: ["Open-ended request", "Embeddings + Milvus", "LLM router", "LangGraph agent", "Confidence check", "Zapier actions"],
+    loop: { from: 4, to: 3, label: "low confidence pauses for human review" },
+    image: {
+      src: "/projects/autonomous-agent-orchestration.webp",
+      width: 1600,
+      height: 1212,
+      alt: "Zapier Agents interface showing an agent's instructions and connected tools",
+      caption: "Public screenshot of Zapier Agents. The orchestration backend described here isn't visible in it. Screenshot: Zapier.",
+    },
   },
+
+  // ── Regions Bank ────────────────────────────────────────────────────────
   {
-    slug: "core-banking-cloud-migration",
-    company: "Regions Bank",
-    track: "backend",
-    period: "Jul 2021 – Apr 2024",
-    title: "Core Banking Legacy Systems Transformation",
-    short: "Core Banking Transformation",
-    tagline: "Moving account and ledger capabilities off a monolithic mainframe onto distributed services.",
-    focus:
-      "Modernize core account and ledger infrastructure by moving capabilities from a monolithic mainframe toward highly available distributed services.",
-    architecture:
-      "An active-active dual-write replication topology, with Kafka streams and Celery workers handling asynchronous processing behind a Django service layer. A local outbox makes each database change and its event record atomic, and sidecar proxies pool persistent broker connections.",
-    challenge:
-      "Message failures, out-of-order transaction logs and database connection bottlenecks got worse during peak transaction periods.",
-    approach:
-      "Containerized sidecar proxies to cut connection churn and keep broker connectivity persistent, with Kafka and Celery moving replication work off the request path.",
-    outcome:
-      "Replication packet-drop errors were eliminated, mainframe dependency overhead fell 40%, and synchronization between the systems held at sub-second latency.",
-    metrics: [
-      { value: "0", label: "replication packet-drop errors" },
-      { value: "−40%", label: "mainframe dependency overhead" },
-      { value: "<1s", label: "synchronization between systems" },
-    ],
-    stack: ["Python", "Django", "Apache Kafka", "Celery", "Dual-write replication", "Transactional outbox", "Sidecar proxies"],
-    flow: ["Mainframe ledger", "Dual-write replication", "Outbox events", "Sidecar broker pool", "Kafka + Celery", "Distributed services"],
-  },
-  {
-    slug: "client-lockbox-portal",
+    slug: "regions-web-platform",
     company: "Regions Bank",
     track: "fullstack",
-    period: "Jul 2021 – Apr 2024",
-    title: "Treasury Management Lockbox Retrieval Portal",
-    short: "Treasury Lockbox Portal",
-    tagline: "A search and reporting workspace for institutional treasury teams over huge lockbox histories.",
+    period: "Late 2021 – 2023",
+    title: "Next-Gen Web Experience & Content Platform Modernization",
+    short: "Web Platform Modernization",
+    tagline: "A slow monolithic banking site rebuilt as fast, independently deployed micro-frontends.",
     focus:
-      "Give institutional treasury users a search, filtering and reporting workspace for large volumes of lockbox transaction records.",
+      "Replace slow, monolithic web layers with a responsive acquisition and self-service experience, and end long release cycles that hurt page speed and search rankings.",
     architecture:
-      "A React and TypeScript frontend backed by C#/.NET Core services over distributed Elasticsearch indices. Searches return an initial interface state quickly, then long-running historical queries continue asynchronously and stream updates over SSE while cold-bucket work completes.",
-    challenge:
-      "Queries over deeply historical, unstructured records caused severe slowdowns and application timeouts.",
+      "A headless, decoupled platform. Next.js micro-frontends serve static and server-rendered components, calling C#/.NET Core microservices through an enterprise API gateway. Those services aggregate data from the Sitecore CMS and core banking systems, and everything runs on Kubernetes (AKS).",
+    challenge: "Migrating a large enterprise site without downtime and without breaking established SEO structure.",
     approach:
-      "A two-phase asynchronous search pipeline that puts responsive initial results first and streams later updates while the historical work finishes.",
+      "Next.js dynamic routing with Incremental Static Regeneration, so editors publish to Sitecore without full redeployments or cache clears.",
     outcome:
-      "Multi-filter dashboard response time fell from about 4.8 seconds to 320 milliseconds, alongside a 48% improvement in commercial client satisfaction.",
+      "Page-load times dropped by about 40%, and frontend and backend teams could ship their services independently.",
     metrics: [
-      { value: "4.8s → 320ms", label: "multi-filter dashboard response" },
-      { value: "+48%", label: "commercial client satisfaction" },
-      { value: "SSE", label: "streamed historical search results" },
+      { value: "−40%", label: "page-load time (approx.)" },
+      { value: "Independent", label: "frontend and backend releases" },
     ],
-    stack: ["React", "TypeScript", "C#", ".NET Core", "Elasticsearch", "Background processing", "Server-Sent Events"],
-    flow: ["Treasury user", "React + TypeScript UI", ".NET Core services", "Elasticsearch indices", "Async cold-bucket search", "SSE updates"],
+    stack: ["Next.js", "React", "TypeScript", "Tailwind CSS", "C#", ".NET Core", "Sitecore", "Kubernetes (AKS)", "Azure Pipelines"],
+    flow: ["Visitor", "Next.js micro-frontends", "API gateway", ".NET Core services", "Sitecore + core banking"],
+    image: {
+      src: "/projects/regions-web-platform.webp",
+      width: 800,
+      height: 600,
+      alt: "Regions online banking for business on a laptop, showing the Business Services product page",
+      caption: "Public image of Regions' online banking for business. Image: Regions Bank.",
+    },
   },
   {
-    slug: "behavioral-ai-engine",
+    slug: "financial-insights-components",
+    company: "Regions Bank",
+    track: "frontend",
+    period: "Early 2023 – Early 2024",
+    title: "Customer Insights Engine & Component Library",
+    short: "Financial Insights UI",
+    tagline: "Spending insights and cash-flow trends inside digital banking, on one shared component library.",
+    focus:
+      "Replace static transaction ledgers with visual insights such as subscription trackers, spending spikes and predicted cash flow, on web and mobile alike.",
+    architecture:
+      "A cross-platform React and React Native front end that consumes standard JSON events from notification microservices. Redux Toolkit manages transaction streams on the device, so components re-render only when new insights arrive.",
+    challenge:
+      "Rendering financial charts, real-time alerts and interactive graphs smoothly across many mobile and web screen configurations.",
+    approach:
+      "A strict, reusable design-system component library, and list virtualization to render long transaction ledgers without memory leaks.",
+    outcome:
+      "Dashboard rendering stayed under 150 ms per session, crash rates fell and more customers adopted the financial-health widgets.",
+    metrics: [{ value: "<150ms", label: "rendering per dashboard session" }],
+    stack: ["React Native", "React", "TypeScript", "Redux Toolkit", "Webpack", "Jest", "React Testing Library", "Figma"],
+    flow: ["Notification services", "JSON events", "Redux Toolkit store", "Design-system components", "Virtualized ledgers"],
+    image: {
+      src: "/projects/financial-insights-components.webp",
+      width: 750,
+      height: 500,
+      alt: "The Regions mobile app with account balances and a Track spending widget",
+      caption: "Public image of the Regions mobile app, including its spending-insights widget. Image: Regions Bank.",
+    },
+  },
+  {
+    slug: "enterprise-api-layer",
+    company: "Regions Bank",
+    track: "backend",
+    period: "2022 – Mid 2023",
+    title: "Enterprise API Integration & Core Modernization Layer",
+    short: "Enterprise API Layer",
+    tagline: "A secure, event-driven middle tier between decades-old cores and modern banking platforms.",
+    focus:
+      "Untangle decades of legacy dependencies: real-time data access, reusable enterprise APIs and faster settlement across modern payment rails.",
+    architecture:
+      "A horizontally scalable middle tier between legacy deposit and lending systems and SaaS-based modern cores. Kafka streams core-system events in real time, and Axway API Management handles security, throttling and open-banking protocols, with every client authenticating through OpenID Connect before it reaches ledger data.",
+    challenge:
+      "Keeping data consistent between real-time open-banking transactions and batch-oriented core databases, without corruption.",
+    approach:
+      "Transactional outbox patterns inside the microservices, keeping message queues and relational state consistent even through network partitions.",
+    outcome:
+      "Onboarding a corporate partner to the APIs went from months to days, with the layer sustaining spikes of thousands of transactions per second.",
+    metrics: [
+      { value: "Months → days", label: "partner API onboarding" },
+      { value: "1,000s TPS", label: "transaction spikes sustained" },
+    ],
+    stack: ["Java", "Spring Boot", "C#", ".NET Web API", "Apache Kafka", "Axway API Management", "OpenID Connect", "Azure", "Docker"],
+    flow: ["Partner or app", "Axway gateway + OIDC", "Spring Boot / .NET services", "Outbox", "Kafka", "Legacy + SaaS cores"],
+    image: {
+      src: "/projects/enterprise-api-layer.webp",
+      width: 1600,
+      height: 871,
+      alt: "A sign-in screen with email and password fields and a single sign-on button",
+      caption:
+        "Illustration only: a single sign-on screen from Forcepoint ONE, a third-party security product. It is not a Regions system; Regions' internal API tooling isn't public.",
+    },
+  },
+  {
+    slug: "fraud-decision-support",
     company: "Regions Bank",
     track: "ai",
-    period: "Jul 2021 – Apr 2024",
-    title: "Omnichannel Predictive Behavioral AI Engine",
-    short: "Behavioral AI Engine",
-    tagline: "Context-aware financial guidance and support automation, with every LLM answer policy-checked.",
+    period: "Mid 2021 – Early 2024",
+    title: "Intelligent Fraud Detection & Decision Support Models",
+    short: "Fraud Decision Support",
+    tagline: "Real-time fraud scores that explain themselves to the people who act on them.",
     focus:
-      "Use contextual signals to give more relevant financial guidance and automate customer-support interactions across banking channels.",
+      "Catch more commercial fraud while cutting the false positives that slow businesses down and disrupt treasury clients' daily work.",
     architecture:
-      "LLM inference combined with retrieval of relevant context and specialized governance logic, running in a Cloudera environment. Generated responses pass through a validation layer that checks them against defined semantic and policy boundaries before they reach a customer.",
+      "A high-throughput machine-learning platform over structured and unstructured transaction histories. Features come from a federated Snowflake repository, models score each event against the client's historical baseline in real time, and scores feed automated alerts and decision-support dashboards for relationship managers.",
     challenge:
-      "Regulatory and privacy risk: hallucinated answers, and the chance of exposing sensitive customer information in generated content.",
+      "Bias in historical training data and unexplainable model shifts were an unacceptable risk for a bank.",
     approach:
-      "A pre-response validation and governance layer that checks generated content against defined boundaries before delivery — semantic and policy validation, not just syntax linting, because syntax checks cannot enforce privacy policy.",
+      "A federated data-governance program and explainable-AI frameworks (SHAP and LIME) that show exactly why each anomaly score fired.",
     outcome:
-      "Automated digital-support resolution improved 55%, with zero compliance or data-privacy exposures reported.",
+      "Clearly more accurate than the earlier rules-based engine, isolating anomalies in milliseconds and helping commercial clients avoid wire and data fraud.",
     metrics: [
-      { value: "+55%", label: "automated digital-support resolution" },
-      { value: "0", label: "compliance or privacy exposures" },
-      { value: "Pre-response", label: "semantic & policy validation" },
+      { value: "Real time", label: "scoring against each client's baseline" },
+      { value: "SHAP / LIME", label: "explanation behind every score" },
     ],
-    stack: ["LLM inference", "RAG", "Vector search", "Multi-agent governance", "Response validation", "Cloudera"],
-    flow: ["Customer channel", "Context retrieval (RAG)", "LLM inference", "Governance agents", "Policy validation", "Safe response"],
+    stack: ["Python", "TensorFlow", "PyTorch", "scikit-learn", "Apache Spark", "Snowflake", "MLOps", "SHAP", "LIME"],
+    flow: ["Transactions", "Snowflake features", "Fraud models", "SHAP / LIME explanation", "Alerts + dashboards"],
+    image: {
+      src: "/projects/fraud-decision-support.webp",
+      width: 1600,
+      height: 1200,
+      alt: "A fraud-analytics dashboard with fraud rates by category, by date, by risk level and by US state",
+      caption:
+        "Illustration only: a generic fraud-analytics dashboard built on sample data. It is not a Regions system; Regions' internal fraud tools aren't public.",
+    },
   },
+
+  // ── Shipt ───────────────────────────────────────────────────────────────
   {
-    slug: "fulfillment-routing-engine",
+    slug: "realtime-shopper-messaging",
     company: "Shipt",
-    track: "backend",
-    period: "Jan 2020 – Jun 2021",
-    title: "Real-Time Marketplace Fulfillment Routing Engine",
-    short: "Fulfillment Routing",
-    tagline: "Matching live shopper capacity to delivery queues through bursty mobile traffic.",
+    track: "fullstack",
+    period: "2020",
+    title: "Real-Time Order Tracking & Communication Platform",
+    short: "Shopper Messaging",
+    tagline: "Shoppers and customers in touch in real time, even from a store with no signal.",
     focus:
-      "Match active shopper capacity with live delivery queues using routing distance and traffic context.",
+      "Connect shoppers in the aisles with customers at home, so out-of-stock items get replacement approvals right away as order volumes surge.",
     architecture:
-      "FastAPI services power routing and fulfillment workflows. Redis caches hot operational data, Kafka carries asynchronous events, and containerized workers with sidecar components absorb bursts of webhook activity before dispatch.",
+      "Shopper (React Native) and customer clients hold long-lived WebSocket connections to a real-time messaging gateway. Go microservices handle the concurrency, Redis keeps active chat sessions in memory and PostgreSQL stores order records.",
     challenge:
-      "Large bursts of mobile-app webhook triggers caused socket allocation failures and network drops at the message-broker boundary.",
+      "Poor cellular coverage inside concrete stores kept dropping WebSockets, and messages were lost.",
     approach:
-      "Micro-caching sidecars on worker nodes that bundle outbound requests before dispatch, cutting the connection load on the downstream brokers.",
+      "An automatic fallback: when a WebSocket heartbeat fails, the backend switches delivery to a queued SMS pipeline through telecom providers.",
     outcome:
-      "Broker connection burden dropped 10×, and the platform supported up to 2.5 million active orders.",
+      "Chat latency stayed under 200 ms and messages lost to in-store dead zones fell by more than 90%, through a phase of multiplying order volume.",
     metrics: [
-      { value: "10×", label: "lower broker connection burden" },
-      { value: "2.5M", label: "active orders supported" },
-      { value: "Real-time", label: "shopper-to-queue matching" },
+      { value: "<200ms", label: "chat latency" },
+      { value: "−90%+", label: "messages lost in store dead zones" },
     ],
-    stack: ["Python", "FastAPI", "Redis", "Apache Kafka", "AWS", "Micro-caching sidecars", "Webhooks"],
-    flow: ["Mobile app webhooks", "Micro-caching sidecar", "Kafka events", "FastAPI routing", "Redis capacity cache", "Shopper ↔ order match"],
+    stack: ["Go", "Node.js", "TypeScript", "React Native", "React", "WebSockets", "gRPC", "Redis", "PostgreSQL"],
+    flow: ["Shopper app", "WebSocket gateway", "Go services", "Redis sessions", "Customer app"],
+    loop: { from: 2, to: 1, label: "heartbeat lost → queued SMS fallback" },
+    image: {
+      src: "/projects/realtime-shopper-messaging.webp",
+      width: 614,
+      height: 644,
+      alt: "Shipt's in-app chat between a shopper and a customer about an order",
+      caption: "Public screenshot of Shipt's shopper–customer messaging. Screenshot: Shipt.",
+    },
   },
   {
-    slug: "merchant-catalog-workspace",
+    slug: "web-checkout-rearchitecture",
     company: "Shipt",
     track: "frontend",
-    period: "Jan 2020 – Jun 2021",
-    title: "Interactive Merchant Catalog & Inventory Workspace",
-    short: "Merchant Catalog",
-    tagline: "A canvas workspace that took dense retail catalogs from 15 FPS to a smooth 60.",
+    period: "Q1 – Q4 2020",
+    title: "Responsive Web App Core Re-architecture",
+    short: "Web Catalog & Checkout",
+    tagline: "The desktop store moved from a client-rendered SPA to Next.js, and got much faster.",
     focus:
-      "Give retail partners an interactive workspace to view, monitor and reorganize dense catalog and inventory structures.",
+      "Improve search crawlability, page speed and desktop–mobile parity as desktop orders grew.",
     architecture:
-      "React and TypeScript around a Canvas-based grid for dense visual structures. Web Workers handle coordinate and layout math off the main thread, and viewport clipping keeps off-screen nodes out of the rendering work.",
+      "The web store moved from a client-side SPA to server-side and static rendering with Next.js. Landing pages and catalog layouts arrive as full HTML, while carts, promo codes and delivery-time choices live in Redux.",
     challenge:
-      "Panning across large catalog graphs slowed layout and dropped rendering to about 15 FPS once more than 1,000 items were on screen.",
+      "Endless product grids full of images caused memory bloat and layout shifts during hydration.",
     approach:
-      "Moved coordinate calculations into Web Workers and clipped rendering to the active viewport so off-screen nodes never touched the main rendering path.",
+      "Strict code-splitting boundaries, virtualized grid rows and a standard component library to cut re-render overhead.",
     outcome:
-      "Stable rendering at about 60 FPS across workspaces with more than 1,500 active catalog nodes.",
+      "First Contentful Paint fell by more than 1.5 seconds, and desktop checkout conversion rose by an estimated 12%.",
     metrics: [
-      { value: "15 → 60 FPS", label: "while panning large catalogs" },
-      { value: "1,500+", label: "active catalog nodes" },
-      { value: "Off-thread", label: "layout math in Web Workers" },
+      { value: "−1.5s+", label: "First Contentful Paint" },
+      { value: "~12%", label: "more desktop checkouts (estimated)" },
     ],
-    stack: ["React", "TypeScript", "HTML5 Canvas", "Web Workers", "Viewport clipping", "LCH color styling"],
-    flow: ["Catalog data", "Layout Web Worker", "Viewport clipping", "Canvas grid", "60 FPS workspace"],
+    stack: ["React", "Next.js", "TypeScript", "Redux", "Styled Components", "Cypress"],
+    flow: ["Shopper's browser", "Next.js SSR / SSG", "Catalog HTML", "Redux cart state", "Checkout"],
+    image: {
+      src: "/projects/web-checkout-rearchitecture.webp",
+      width: 500,
+      height: 400,
+      alt: "Target's same-day delivery checkout, powered by Shipt",
+      caption:
+        "Target's same-day delivery checkout powered by Shipt, from a 2019 press article. It shows the service, not the Shipt web app described here. Image: Target.",
+    },
   },
   {
-    slug: "shopper-delivery-audit-platform",
+    slug: "delivery-window-engine",
     company: "Shipt",
-    track: "fullstack",
-    period: "Jan 2020 – Jun 2021",
-    title: "Shopper Delivery Experience & Auditing Platform",
-    short: "Delivery Auditing",
-    tagline: "One operational workspace for trips, payouts and fulfillment records — fast at peak.",
+    track: "backend",
+    period: "Early – Aug 2020",
+    title: "High-Availability Delivery Window Slots Engine",
+    short: "Delivery Windows",
+    tagline: "Delivery windows that held up through record pandemic demand, with no double-booked slots.",
     focus:
-      "Bring trip details, shopper payouts and fulfillment records into one workspace for investigating delivery anomalies and payout accuracy.",
+      "End “no delivery windows available” during the early-2020 spikes by calculating regional capacity in real time without overloading the main databases.",
     architecture:
-      "React provides the operational interface, Django serves the APIs, PostgreSQL stores relational delivery and payout data, and Elasticsearch searches operational logs. A multi-phase asynchronous query flow shows an immediate loading state and streams result chunks to the UI over SSE.",
+      "A multi-threaded Go service computes open windows by joining shopper availability, store hours and historical drive times. A write-through cache on Redis Enterprise prevents over-allocating any hour, and completed orders emit Kafka events for matching and routing.",
     challenge:
-      "Multi-column relational lookups across millions of historical delivery events made responses slow and the portal sluggish.",
+      "Thousands of shoppers trying to book the same evening slot at once created severe race conditions.",
     approach:
-      "Asynchronous query processing with immediate UI feedback and incremental result delivery over SSE, so useful information shows up without waiting for one large response.",
+      "A distributed lock manager in Redis, with slot selection kept fully separate from payment processing through asynchronous queues.",
     outcome:
-      "Typical query responses went from several seconds to about 320 milliseconds, keeping the portal responsive during peak periods.",
+      "Record traffic passed without a widespread database timeout or checkout failure, at more than 15,000 API operations per second with slot checks under 50 ms.",
     metrics: [
-      { value: "~320ms", label: "typical query response (from several seconds)" },
-      { value: "Millions", label: "of historical delivery events" },
-      { value: "SSE", label: "streamed result chunks" },
+      { value: "15,000+/s", label: "API operations at peak" },
+      { value: "<50ms", label: "per slot check" },
     ],
-    stack: ["React", "Python", "Django", "PostgreSQL", "Elasticsearch", "Async queries", "Server-Sent Events"],
-    flow: ["Ops investigator", "React workspace", "Django APIs", "PostgreSQL + Elasticsearch", "Async query chunks", "SSE stream"],
+    stack: ["Go", "Python", "Apache Kafka", "Redis Enterprise", "PostgreSQL", "Kubernetes (EKS)"],
+    flow: ["Checkout", "Go slot engine", "Redis locks + cache", "Kafka events", "Matching + routing"],
+    image: {
+      src: "/projects/delivery-window-engine.webp",
+      width: 1400,
+      height: 1312,
+      alt: "Shipt app screens for choosing a delivery time and for a shopper's available orders",
+      caption: "Public screenshots of Shipt's delivery scheduling and shopper order-availability screens. Screenshots: Shipt.",
+    },
+  },
+  {
+    slug: "smart-batching-optimizer",
+    company: "Shipt",
+    track: "ai",
+    period: "Mid 2020 – Q2 2021",
+    title: "Predictive Shopper Route & Batching Optimization",
+    short: "Smart Batching",
+    tagline: "Machine-learned estimates feeding a fast solver that groups orders into one shopper trip.",
+    focus:
+      "Raise shopper efficiency (items picked per hour) and delivery economics, so the existing network could absorb volume spikes with stable pay.",
+    architecture:
+      "Historical pickups, item weights and trip data live in Snowflake, and Spark prepares the features. XGBoost models estimate picking and driving times, which feed a high-performance C++ heuristic solver that groups several customers' orders into a single shopper trip.",
+    challenge:
+      "Static routing couldn't cope with real-time surprises such as out-of-stock items or traffic accidents.",
+    approach:
+      "Dynamic reinforcement loops that recalculate active batches on the fly from telemetry sent by the Shopper app.",
+    outcome:
+      "In-store picking efficiency rose 18%, miles driven per order fell by an estimated 14%, and late deliveries dropped noticeably.",
+    metrics: [
+      { value: "+18%", label: "in-store picking efficiency" },
+      { value: "−14%", label: "miles driven per order (estimated)" },
+    ],
+    stack: ["Python", "C++", "XGBoost", "TensorFlow", "Apache Spark", "Snowflake", "AWS SageMaker"],
+    flow: ["Snowflake history", "Spark features", "XGBoost estimates", "C++ batching solver", "Shopper app"],
+    loop: { from: 4, to: 3, label: "live telemetry re-batches active trips" },
+  },
+
+  // ── Daxko ───────────────────────────────────────────────────────────────
+  {
+    slug: "member-engagement-automation",
+    company: "Daxko",
+    track: "fullstack",
+    period: "May – Nov 2019",
+    title: "Omni-Channel Member Engagement & Drip Automation Engine",
+    short: "Member Engagement",
+    tagline: "Gyms re-engage members who stop showing up, automatically, by SMS and email.",
+    focus:
+      "Take manual outreach off gym staff: members who haven't checked in for a set time (say 14 days) get re-engaged automatically, cutting churn without front-desk work.",
+    architecture:
+      "A React configuration dashboard over a Ruby on Rails backend that tracks member behavior such as check-in drop-offs and visit milestones. Sidekiq workers backed by Redis run high-volume message queues that send SMS through Twilio and email through AWS SES.",
+    challenge:
+      "Large batches sent during the morning rush hit provider rate limits and slowed database transactions.",
+    approach:
+      "A distributed token-bucket rate limiter in Redis to smooth delivery, and transactional writes moved off the primary PostgreSQL tables.",
+    outcome:
+      "Shipped to enterprise customers in November 2019, ahead of the post-holiday rush, automating lifecycle messages across hundreds of community centers.",
+    metrics: [],
+    stack: ["Ruby on Rails", "React", "Node.js", "PostgreSQL", "Redis", "Sidekiq", "Twilio", "AWS SES"],
+    flow: ["Check-in events", "Rails rules", "Sidekiq + Redis queues", "Token-bucket limiter", "Twilio SMS / SES email"],
+    image: {
+      src: "/projects/member-engagement-automation.webp",
+      width: 956,
+      height: 528,
+      alt: "Daxko Engage's playbook builder for automated member messages",
+      caption:
+        "Public screenshot of Daxko Engage's playbook builder, from a later version of the product than the 2019 work described here. Screenshot: Daxko.",
+    },
+  },
+  {
+    slug: "childcare-checkin-kiosk",
+    company: "Daxko",
+    track: "frontend",
+    period: "Jun – Dec 2019",
+    title: "Childcare & Family Security Check-In Kiosk",
+    short: "Childcare Check-In",
+    tagline: "A fast, secure check-in terminal for the busiest minutes of a YMCA's day.",
+    focus:
+      "Make the morning and evening childcare rush at community centers and YMCAs fast and safe: drop-off, allergy alerts and guardian verification in one terminal.",
+    architecture:
+      "A React single-page app, packaged in Electron for desktop installs or run in tablet browsers. It keeps a WebSocket open to local hardware and authentication servers, and Redux synchronizes scans, authorized-guardian photos and room capacities locally.",
+    challenge:
+      "Barcode scanners, signature pads and webcams streaming data locked up the single-threaded UI.",
+    approach: "Hardware data streams moved into background Web Workers, keeping the interface loop responsive.",
+    outcome:
+      "Replaced aging legacy screens with one modern component system that looks and behaves the same across operating systems, rolled out to client branches in December 2019.",
+    metrics: [],
+    stack: ["React", "TypeScript", "Redux", "Sass", "WebSockets", "Electron", "Jest"],
+    flow: ["Scanner / camera / pad", "Web Workers", "Redux state", "Kiosk UI", "Auth servers"],
+  },
+  {
+    slug: "member-ledger-sync",
+    company: "Daxko",
+    track: "backend",
+    period: "May – Oct 2019",
+    title: "Multi-Tenant Data Normalization & Event Sync Service",
+    short: "Member Ledger Sync",
+    tagline: "One consolidated member ledger from the databases of several acquired platforms.",
+    focus:
+      "Give large fitness chains one view of rosters, payments and usage across all locations, after Daxko acquired several separate platforms.",
+    architecture:
+      "Change data capture: Debezium reads row-level changes from each acquired platform's database and streams them into Kafka, where Java/Spring Boot services normalize the payloads and update a central SQL Server reporting ledger.",
+    challenge:
+      "Unexpected schema changes in older local databases crashed consumers and stalled replication.",
+    approach:
+      "A central Avro Schema Registry in Kafka to enforce data contracts, with malformed payloads isolated in dead-letter queues.",
+    outcome:
+      "Real-time consolidated reporting across separate products, without a risky database migration.",
+    metrics: [],
+    stack: ["Java", "Spring Boot", "Apache Kafka", "Debezium", "Avro Schema Registry", "SQL Server", "Docker", "AWS ECS"],
+    flow: ["Acquired platform DBs", "Debezium CDC", "Kafka + Avro registry", "Spring Boot normalizers", "SQL Server ledger"],
+    loop: { from: 3, to: 2, label: "contract violations parked in dead-letter queues" },
+  },
+  {
+    slug: "retention-propensity-scoring",
+    company: "Daxko",
+    track: "ai",
+    period: "May – Nov 2019",
+    title: "Member Retention & Propensity Scoring Pipeline",
+    short: "Retention Scoring",
+    tagline: "Flagging members likely to cancel, months before they ask.",
+    focus:
+      "Spot members likely to cancel well before they do, so operations teams can reach them with offers or personal-training check-ins.",
+    architecture:
+      "A weekly batch pipeline orchestrated by Airflow pulls anonymized check-ins, account ages, payment declines and facility distances from Redshift. Python builds the features, an ensemble of Random Forest and XGBoost classifiers on SageMaker scores each member, and the risk scores flow back into retention dashboards.",
+    challenge:
+      "Members who visit irregularly produced sparse data and many false positives in the baseline models.",
+    approach:
+      "Feature engineering that tracks how consistent a member's time-of-day and day-of-week check-ins are, rather than raw visit counts.",
+    outcome:
+      "Marketing teams had member-health dashboards in place before the post-holiday peak season.",
+    metrics: [],
+    stack: ["Python", "scikit-learn", "XGBoost", "Random Forest", "Pandas", "Amazon Redshift", "AWS SageMaker", "Apache Airflow"],
+    flow: ["Redshift history", "Airflow weekly job", "Feature engineering", "RF + XGBoost on SageMaker", "Retention dashboards"],
   },
 ];
 
 export const getProject = (slug: string) => projects.find((p) => p.slug === slug);
 
-export const companies: Company[] = ["Zapier", "Regions Bank", "Shipt"];
+export const companies: Company[] = ["Zapier", "Regions Bank", "Shipt", "Daxko"];
 
 /** Recurring engineering themes across the case studies. */
 export type Pattern = {
@@ -313,37 +538,37 @@ export const patterns: Pattern[] = [
   {
     id: "events",
     title: "Event-driven integration",
-    body: "Kafka, webhooks, Celery workers and async processing to absorb bursts and keep request handling separate from downstream work.",
-    projects: ["async-messaging-pipeline", "core-banking-cloud-migration", "fulfillment-routing-engine"],
+    body: "Kafka, change data capture and async workers absorb bursts and keep request handling separate from downstream work.",
+    projects: ["reliable-event-routing", "enterprise-api-layer", "delivery-window-engine", "member-ledger-sync"],
   },
   {
     id: "outbox",
     title: "Reliable event publication",
     body: "Transactional outbox: the business change and its event commit in one local transaction, and consumers tolerate retries and duplicates.",
-    projects: ["async-messaging-pipeline", "core-banking-cloud-migration"],
+    projects: ["reliable-event-routing", "enterprise-api-layer"],
   },
   {
-    id: "search",
-    title: "Fast search over history",
-    body: "Elasticsearch indexing, hot/cold tiers and background retrieval keep searches over years of records responsive.",
-    projects: ["zap-history-audit-engine", "client-lockbox-portal", "shopper-delivery-audit-platform"],
+    id: "realtime",
+    title: "Real-time state under load",
+    body: "WebSockets, Redis and distributed locks keep live state correct when thousands of people act at the same moment.",
+    projects: ["realtime-shopper-messaging", "delivery-window-engine", "copilot-workflow-builder"],
   },
   {
     id: "interfaces",
-    title: "Data-heavy interfaces at 60 FPS",
-    body: "Canvas/SVG layers, Web Workers, virtualization and viewport clipping take work off the main thread.",
-    projects: ["visual-workflow-canvas", "merchant-catalog-workspace"],
+    title: "Data-heavy interfaces that stay smooth",
+    body: "Canvas/SVG layers, Web Workers, virtualization and viewport culling take work off the main thread.",
+    projects: ["visual-workflow-canvas", "financial-insights-components", "web-checkout-rearchitecture", "childcare-checkin-kiosk"],
   },
   {
     id: "ai",
-    title: "LLM output is untrusted input",
-    body: "Generated workflows and answers are proposals, checked against schemas, dependency rules and policy before they run or ship.",
-    projects: ["natural-language-workflow-engine", "behavioral-ai-engine"],
+    title: "Models are checked, not trusted",
+    body: "Generated plans and model scores pass schema checks, confidence floors and explanations before they act or reach a person.",
+    projects: ["autonomous-agent-orchestration", "copilot-workflow-builder", "fraud-decision-support"],
   },
   {
-    id: "feedback",
-    title: "Progress users can see",
-    body: "Instant loading states, streamed partial results and structured errors make long async work feel fast.",
-    projects: ["zap-history-audit-engine", "client-lockbox-portal", "shopper-delivery-audit-platform", "natural-language-workflow-engine"],
+    id: "resilience",
+    title: "Graceful under failure",
+    body: "Fallback channels, rate limiters and dead-letter queues keep things working when networks, partners or schemas misbehave.",
+    projects: ["realtime-shopper-messaging", "member-engagement-automation", "member-ledger-sync", "reliable-event-routing"],
   },
 ];

@@ -11,7 +11,7 @@ const inter = Inter({ variable: "--font-inter", subsets: ["latin"] });
 const jetbrains = JetBrains_Mono({ variable: "--font-jetbrains", subsets: ["latin"] });
 
 const description =
-  "Senior Full-Stack Engineer with 7+ years at Zapier, Regions Bank, Shipt and Daxko. Ten case studies across React, TypeScript, Python, C#/.NET, distributed systems and production AI.";
+  "Senior Full-Stack Engineer with 7+ years at Zapier, Regions Bank, Shipt and Daxko. Sixteen case studies across React, TypeScript, Python, C#/.NET, distributed systems and production AI.";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://apollo0229.github.io/portfolio/"),

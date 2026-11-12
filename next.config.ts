@@ -7,6 +7,8 @@ const basePath = process.env.PAGES_BASE_PATH ?? "";
 const nextConfig: NextConfig = {
   output: "export",
   basePath,
+  // Plain <img> paths don't get the base path added, so pages read it from here.
+  env: { NEXT_PUBLIC_BASE_PATH: basePath },
   trailingSlash: true,
   images: { unoptimized: true },
   turbopack: {

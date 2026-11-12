@@ -8,7 +8,7 @@ export function GET() {
   return ogCard({
     eyebrow: "Portfolio",
     title: role.headline.join(" "),
-    subtitle: "Ten case studies from Zapier, Regions Bank and Shipt — full stack, frontend, backend and AI.",
+    subtitle: "Sixteen case studies from Zapier, Regions Bank, Shipt and Daxko — full stack, frontend, backend and AI.",
     accent: "#4f46e5",
   });
 }

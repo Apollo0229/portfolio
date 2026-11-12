@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Activity, Gauge, Inbox, Radio, Search, ShieldCheck, type LucideIcon } from "lucide-react";
+import { Activity, Gauge, Inbox, LifeBuoy, Radio, ShieldCheck, type LucideIcon } from "lucide-react";
 import { getProject, patterns } from "@/data/projects";
 import { Reveal } from "../effects/reveal";
 import { SpotlightCard } from "../effects/spotlight-card";
@@ -8,10 +8,10 @@ import { trackColor } from "../ui";
 const icons: Record<string, LucideIcon> = {
   events: Radio,
   outbox: Inbox,
-  search: Search,
+  realtime: Activity,
   interfaces: Gauge,
   ai: ShieldCheck,
-  feedback: Activity,
+  resilience: LifeBuoy,
 };
 
 /** Recurring engineering themes, each linked to the case studies that use it. */
