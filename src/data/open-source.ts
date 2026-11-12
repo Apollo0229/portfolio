@@ -1,4 +1,4 @@
-import { CircleCheckBig, Database, type LucideIcon, RotateCcw, Search, Send, ShieldCheck, Sparkles, Zap } from "lucide-react";
+import { CircleCheckBig, Database, Flame, type LucideIcon, RotateCcw, Search, Send, ShieldCheck, Sparkles, Timer, Zap } from "lucide-react";
 import type { RoleKey } from "./roles";
 
 export type TraceStep = {
@@ -75,6 +75,32 @@ export const openSource: OpenSourceProject[] = [
         { icon: RotateCcw, label: "Recover", detail: "1,996 failed sends retried with the same key", tone: "ok" },
         { icon: Database, label: "Store", detail: "21,295 acknowledged · 21,295 stored", tone: "ok" },
         { icon: CircleCheckBig, label: "Process", detail: "21,295 applied once · 198 redeliveries skipped", tone: "ok" },
+      ],
+    },
+  },
+  {
+    name: "Ledgerline",
+    tagline: "Seven years of payments. Page one in milliseconds.",
+    description:
+      "Search across years of lockbox payments without waiting on the oldest data. An ASP.NET Core API sends the exact first page from the newest months at once, counts all older history in one request alongside it, and streams the totals year by year to a React portal over server-sent events.",
+    demo: { url: "https://apollo0229.github.io/ledgerline/", label: "Replay real searches" },
+    badge: "Open source · recorded demo",
+    source: "https://github.com/Apollo0229/ledgerline",
+    highlights: [
+      "At 20 million payments under load: page one 1.9–6.3× sooner and 30–40% more searches per second than one query giving the same answer",
+      "Measured, found, fixed: profiling showed the cold search counting every document twice; admission control fixed p95 latency under load",
+      "Every streamed answer is tested against a plain search for exactly the same page and totals",
+    ],
+    stack: ["C#", ".NET 10", "ASP.NET Core", "Elasticsearch", "Server-sent events", "React 19", "TypeScript", "Docker", "xUnit", "GitHub Actions"],
+    leadFor: ["fullstack", "backend"],
+    trace: {
+      title: "Recorded search: 20 million payments, caches dropped",
+      steps: [
+        { icon: Search, label: "Plan", detail: "Last 3 months, then 2026 back to 2019", tone: "ok" },
+        { icon: Flame, label: "Hot tier", detail: "Exact first page of 50 at 48 ms", tone: "ok" },
+        { icon: Database, label: "Cold history", detail: "8 years counted in one request, alongside", tone: "ok" },
+        { icon: CircleCheckBig, label: "Done", detail: "20,000,000 matches totalled at 199 ms", tone: "ok" },
+        { icon: Timer, label: "One plain search", detail: "203 ms before anything appears", tone: "bad" },
       ],
     },
   },
