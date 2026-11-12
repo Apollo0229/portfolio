@@ -30,7 +30,7 @@ export type Experience = {
 export const experience: Experience[] = [
   {
     company: "Zapier",
-    role: "Senior Full-Stack Engineer",
+    role: "Senior Software Engineer & Full-Stack",
     period: "May 2024 – Jul 2026",
     location: "Remote, US",
     domain: "AI · Workflow automation SaaS",
@@ -50,7 +50,7 @@ export const experience: Experience[] = [
   },
   {
     company: "Regions Bank",
-    role: "Senior Software Engineer / Full-Stack Team Lead",
+    role: "Senior Full-Stack Engineer",
     period: "Jul 2021 – Apr 2024",
     location: "Birmingham, AL",
     domain: "Fintech · Digital banking",
