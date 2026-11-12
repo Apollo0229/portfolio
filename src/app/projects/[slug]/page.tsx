@@ -84,6 +84,7 @@ export default async function CaseStudy({ params }: PageProps<"/projects/[slug]"
             <p className="mt-5 max-w-3xl text-xl text-pretty text-muted">{project.tagline}</p>
           </Reveal>
 
+          {project.metrics.length > 0 && (
           <dl className="mt-12 grid gap-4 sm:grid-cols-3">
             {project.metrics.map((m, i) => (
               <Reveal key={m.label} delay={0.1 + i * 0.08}>
@@ -100,7 +101,8 @@ export default async function CaseStudy({ params }: PageProps<"/projects/[slug]"
               </Reveal>
             ))}
           </dl>
-          <p className="mt-3 text-xs text-muted">Reported project outcomes.</p>
+          )}
+          {project.metrics.length > 0 && <p className="mt-3 text-xs text-muted">Reported project outcomes.</p>}
         </div>
       </header>
 
@@ -125,6 +127,29 @@ export default async function CaseStudy({ params }: PageProps<"/projects/[slug]"
             </dl>
           </div>
         </Reveal>
+
+        {project.image && (
+          <Reveal>
+            <figure className="overflow-hidden rounded-3xl border border-line bg-white">
+              <div className="grid place-items-center bg-canvas p-4 sm:p-8">
+                {/* Static export: images are served as-is, so a plain img with known dimensions is enough. */}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}${project.image.src}`}
+                  width={project.image.width}
+                  height={project.image.height}
+                  alt={project.image.alt}
+                  loading="lazy"
+                  decoding="async"
+                  className="h-auto max-h-[32rem] w-auto max-w-full rounded-xl shadow-sm"
+                />
+              </div>
+              <figcaption className="border-t border-line px-6 py-4 text-sm text-pretty text-muted">
+                {project.image.caption}
+              </figcaption>
+            </figure>
+          </Reveal>
+        )}
 
         <section>
           <Reveal>

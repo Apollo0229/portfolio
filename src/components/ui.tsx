@@ -13,6 +13,7 @@ export const companyColor: Record<Company, string> = {
   Zapier: "#ff4f00",
   "Regions Bank": "#4d8a1f",
   Shipt: "#0f9d76",
+  Daxko: "#2563eb",
 };
 
 export function CompanyMark({ company }: { company: Company }) {
